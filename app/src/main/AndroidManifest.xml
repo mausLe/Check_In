@@ -23,7 +23,7 @@
         android:label="ALGO BootCamp"
         android:screenOrientation="portrait">
         <activity
-            android:name=".MenuActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation"
             android:icon="@drawable/icon"
             android:label="ALGO BootCamp"
@@ -34,6 +34,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+        </activity>
+        <activity
+            android:name=".MenuActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+
         </activity>
 
         <meta-data
@@ -44,11 +53,11 @@
             android:value="face" />
 
         <activity
-            android:name="com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name=".FaceTrackerActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            >
         </activity>
     </application>
 

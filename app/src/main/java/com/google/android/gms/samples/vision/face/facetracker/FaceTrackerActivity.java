@@ -78,6 +78,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
+    private static TextView NameClass;
 
 
     private static final int RC_HANDLE_GMS = 9001;
@@ -107,9 +108,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
 
         Glocal.Msg= (TextView) findViewById(R.id.msg);
-        Glocal.NameClass = (TextView)findViewById(R.id.nameClass);
-
-        Glocal.NameClass.setText(Glocal.ClassID);
+        NameClass = (TextView)findViewById(R.id.nameClass);
+        NameClass.setText(Glocal.ClassID);
 
         /////
         //showAlertDialog();

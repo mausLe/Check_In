@@ -35,7 +35,7 @@
         android:layout_gravity="center_horizontal"
         android:maxLines="10"
         android:padding="8dp"
-        android:textSize="24sp"
+        android:textSize="24dp"
         android:text="" />
 
     <ImageView
@@ -63,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="620dp"
         android:layout_marginLeft="60dp"
+        android:textSize="24dp"
         android:text="" />
 
 </FrameLayout>

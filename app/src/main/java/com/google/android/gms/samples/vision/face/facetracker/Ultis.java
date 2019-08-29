@@ -49,4 +49,5 @@ public final class Ultis {
 
         return Bitmap.createBitmap(Src,X,Y, Width, Height);
     }
+
 }
