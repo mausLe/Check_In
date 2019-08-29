@@ -68,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
         {
             //Log.d("Files", "FileName:" + files[i].getPath());
             Bitmap bm = BitmapFactory.decodeFile(files[i].getPath());
-            String base64_image = BitmapToBase64(bm);
+            String string_image = BitmapToBase64(bm);
 
             JSONObject postData = new JSONObject();
             try {
                 postData.put("image_name", files[i].getName());
-                postData.put("base64_image", base64_image);
+                postData.put("base64_image", string_image);
 
                 Log.d("AAAA", postData.toString());
                 new SendDeviceDetails().execute("http://192.168.20.170:5000/syncImage", postData.toString());

@@ -195,7 +195,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
 
         Date date = new Date();
 
-        File outputFile = new File(folder_gui,formatter.format(date) + Glocal.ClassID + ".jpg");
+        File outputFile = new File(folder_gui,formatter.format(date) + Glocal.ClassID + ".png");
 
         FileOutputStream fo = new FileOutputStream(outputFile);
         fo.write(bytes.toByteArray());
