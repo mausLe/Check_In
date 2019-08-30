@@ -16,23 +16,18 @@
 package com.google.android.gms.samples.vision.face.facetracker;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.AudioManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
+
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.ImageView;
 
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
 
@@ -130,6 +125,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             Glocal.Msg.setText("Wait for face");
             return;
         }
+
         Glocal.CurrentFace=face;
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
@@ -143,9 +139,9 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         mBoxPaint.setColor(Color.GREEN);
-//        canvas.drawCircle(x,y,2,mBoxPaint);
-//        canvas.drawCircle(cx,cy,2,mBoxPaint);
-//        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        canvas.drawCircle(x,y,2,mBoxPaint);
+        canvas.drawCircle(cx,cy,2,mBoxPaint);
+        canvas.drawRect(left, top, right, bottom, mBoxPaint);
         Glocal.ProgressFace=Glocal.CurrentFace;
         Glocal.ProgressFrame=Glocal.CurrentFrame;
 
@@ -166,7 +162,9 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             try {
 
                 savebitmap(bmp);
+                Glocal.NumOfSV +=1;
 
+                Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
                 Glocal.viewresult.setImageBitmap(bmp);
                 Glocal.status.setImageResource(R.drawable.confirm);
 
@@ -185,17 +183,33 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-        File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "IMAGE_DATA");
-        if (!folder_gui.exists())
+        //Create root folder
+        File folder_data = new File(Environment.getExternalStorageDirectory() + File.separator + "CHECK_IN_DATA");
+        if (!folder_data.exists())
         {
-            folder_gui.mkdir();
+            folder_data.mkdir();
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss_");
+        //Create class folder
+        File folder_class = new File(folder_data,Glocal.ClassID.toUpperCase());
+        if (!folder_class.exists())
+        {
+            folder_class.mkdir();
+        }
 
+        //Create date folder
         Date date = new Date();
+        SimpleDateFormat date_format = new SimpleDateFormat("dd_MM_yyyy");
+        File folder_date = new File(folder_class,date_format.format(date));
+        if (!folder_date.exists())
+        {
+            folder_date.mkdir();
+        }
 
-        File outputFile = new File(folder_gui,formatter.format(date) + Glocal.ClassID + ".png");
+
+        SimpleDateFormat time_format = new SimpleDateFormat("HH_mm_ss");
+
+        File outputFile = new File(folder_date,time_format.format(date) + ".png");
 
         FileOutputStream fo = new FileOutputStream(outputFile);
         fo.write(bytes.toByteArray());

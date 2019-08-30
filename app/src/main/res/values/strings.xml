@@ -7,10 +7,11 @@
     <string name="try_again">Try Again</string>
     <string name="algo_bootcamp_2019">ALGO BOOTCAMP 2019</string>
     <string name="register">REGISTER</string>
+    <string name="sync">SYNC</string>
     <string name="cancel">Cancel</string>
     <string name="class_name">Class ID</string>
     <string name="add_new_class">Add new class</string>
-
+    <string name="finish">Finish</string>
     <string name="check">Check success</string>
     <string name="titlemenu">Enter Class ID</string>
 </resources>

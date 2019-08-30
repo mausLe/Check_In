@@ -11,11 +11,12 @@ import com.google.android.gms.vision.face.Face;
 public final class Glocal {
     public static Bitmap CurrentFrame;
     public static Face CurrentFace;
-
+    public static Integer NumOfSV = 0;
     public static Context ApplicationContext;
     public static Boolean inProgress=true;
     public static ImageView viewresult;
     public static ImageView status;
+    public static TextView numofsv;
     public static Bitmap ProgressFrame;
     public static Face ProgressFace;
     public static String ClassID="0";

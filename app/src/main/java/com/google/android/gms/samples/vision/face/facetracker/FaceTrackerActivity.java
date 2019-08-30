@@ -49,6 +49,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview;
@@ -79,6 +80,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
     private static TextView NameClass;
+    private Button btnFinish;
 
 
     private static final int RC_HANDLE_GMS = 9001;
@@ -101,15 +103,19 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.main);
-//        Glocal.inProgress=true;
 
         Glocal.viewresult = (ImageView) findViewById(R.id.imageView3);
         Glocal.status = (ImageView) findViewById(R.id.imageView4);
+        Glocal.numofsv = (TextView) findViewById(R.id.numberSV);
+        Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
 
 
         Glocal.Msg= (TextView) findViewById(R.id.msg);
+        btnFinish = (Button)findViewById(R.id.btnfinish);
+
         NameClass = (TextView)findViewById(R.id.nameClass);
         NameClass.setText(Glocal.ClassID);
+
 
         /////
         //showAlertDialog();
@@ -127,8 +133,17 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             requestCameraPermission();
         }
 
-        //
-        //
+        btnFinish.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(FaceTrackerActivity.this, MainActivity.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
 
@@ -465,31 +480,13 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     }
 
-//    public static File savebitmap(@NonNull Bitmap bmp) throws IOException {
-//        Glocal.inProgress=false;
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//
-//        File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "GUI");
-//        if (!folder_gui.exists())
-//        {
-//            folder_gui.mkdir();
-//        }
-//
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
-//
-//        Date date = new Date();
-//
-//        File outputFile = new File(folder_gui,formatter.format(date) + ".jpg");
-//
-//        FileOutputStream fo = new FileOutputStream(outputFile);
-//        fo.write(bytes.toByteArray());
-//        fo.close();
-//
-//
-//        ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-//        toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
-//        return outputFile;
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("CDA", "onBackPressed Called");
+//        Intent setIntent = new Intent(FaceTrackerActivity.this, MainActivity.class);
+//        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(setIntent);
 //    }
+
 
 }

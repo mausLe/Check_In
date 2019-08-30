@@ -8,8 +8,8 @@
 
     <LinearLayout
         android:id="@+id/menu_choose"
-        android:layout_width="363dp"
-        android:layout_height="151dp"
+        android:layout_width="352dp"
+        android:layout_height="wrap_content"
         android:background="@color/common_signin_btn_light_text_default"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,12 +22,20 @@
             android:id="@+id/regis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/mybutton"
+            android:textSize="36sp"
             android:text="@string/register" />
 
         <Button
             android:id="@+id/sync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sync" />
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/mybutton"
+            android:textSize="36sp"
+            android:text="@string/sync" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

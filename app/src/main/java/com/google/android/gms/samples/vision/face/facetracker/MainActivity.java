@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.TypefaceProvider;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,15 +36,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TypefaceProvider.registerDefaultIconSets();
+        Glocal.NumOfSV=0;
 
         btnSync = (Button)findViewById(R.id.sync);
-        btnRes = (Button)findViewById(R.id.regis);
+        btnRes = (Button) findViewById(R.id.regis);
 
         btnRes.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                 startActivity(intent);
                 finish();
             }
@@ -50,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
         btnSync.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                syncImage();
+                //syncImage();
 
             }
         });
+
     }
 
 
@@ -72,14 +80,17 @@ public class MainActivity extends AppCompatActivity {
 
             JSONObject postData = new JSONObject();
             try {
+
                 postData.put("image_name", files[i].getName());
                 postData.put("base64_image", string_image);
 
                 Log.d("AAAA", postData.toString());
                 new SendDeviceDetails().execute("http://192.168.20.170:5000/syncImage", postData.toString());
+                files[i].delete();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
 
         }
 
@@ -134,9 +145,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
+            Log.e("RESULT_SYNC", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         }
     }
+
 
 
 

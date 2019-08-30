@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+
 public class MenuActivity extends AppCompatActivity{
     private EditText mEdit;
     private Button btn;
@@ -20,16 +22,14 @@ public class MenuActivity extends AppCompatActivity{
         Glocal.ApplicationContext = this;
         mEdit = (EditText)findViewById(R.id.editTextID);
 
-
-
-        btn = (Button)findViewById(R.id.buttonOK);
+        btn = (Button) findViewById(R.id.buttonOK);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 if(validateFields()){
                     Glocal.ClassID = mEdit.getText().toString();
                     Intent intent = new Intent(MenuActivity.this, FaceTrackerActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }

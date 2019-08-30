@@ -16,31 +16,36 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.293">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:textSize="23dp"
+            android:text="@string/titlemenu"
 
-            android:text="@string/titlemenu" />
+            android:textSize="23dp" />
 
         <EditText
             android:id="@+id/editTextID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/class_name" />
+            android:textSize="30dp"
+            android:ems="20"
+            android:hint="@string/class_name"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/buttonOK"
             android:layout_width="177dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="100dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/mybutton"
+            android:textSize="30sp"
             android:text="@string/ok" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
