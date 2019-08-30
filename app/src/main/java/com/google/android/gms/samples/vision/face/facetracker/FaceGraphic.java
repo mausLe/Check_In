@@ -24,7 +24,7 @@ import android.graphics.Paint;
 import android.media.AudioManager;
 
 import android.media.ToneGenerator;
-import android.net.Uri;
+
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
@@ -110,8 +110,8 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      * Draws the face annotations for position on the supplied canvas.
      */
     private static final int cx = (Glocal.coordEllip[0] + Glocal.coordEllip[2])/2; // (left + right)/2
-    private static final int cy = 30 + (Glocal.coordEllip[1] + Glocal.coordEllip[3])/2; //(top + bot)/2
-    private static final int radius = 20;
+    private static final int cy = 20 + (Glocal.coordEllip[1] + Glocal.coordEllip[3])/2; //(top + bot)/2
+    private static final int radius = 30;
 //    private Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
 
     private double dis(float x, float y){
