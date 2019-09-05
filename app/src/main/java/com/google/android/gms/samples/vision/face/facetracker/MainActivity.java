@@ -10,20 +10,23 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Spinner;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.TypefaceProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static com.google.android.gms.samples.vision.face.facetracker.Ultis.BitmapToBase64;
 
@@ -31,16 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnRes;
     private Button btnSync;
+    private Spinner mySpin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TypefaceProvider.registerDefaultIconSets();
+
         Glocal.NumOfSV=0;
 
         btnSync = (Button)findViewById(R.id.sync);
         btnRes = (Button) findViewById(R.id.regis);
+        mySpin = (Spinner) findViewById(R.id.list_dir);
+//
+//        ArrayList<String> list_class = getAllFiles("/CHECK_IN_DATA");
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list_class);
+//        listv_class.setAdapter(adapter);
 
         btnRes.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -67,10 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void syncImage()
     {
-        String path = Environment.getExternalStorageDirectory().toString() + "/IMAGE_DATA";
-        //Log.d("Files", "Path: " + path);
-        File directory = new File(path);
-        File[] files = directory.listFiles();
+        File[] files = null;
         //Log.d("Files", "Size: "+ files.length);
         for (int i = 0; i < files.length; i++)
         {
@@ -149,7 +155,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static ArrayList<String> getAllFiles(String _path)
+    {
+        String path = Environment.getExternalStorageDirectory().toString() + _path;
+        //Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        FileFilter filterDirectoriesOnly = new FileFilter() {
+            public boolean accept(File file) {
+                return file.isDirectory();
+            }
+        };
 
+        ArrayList<String> list_class = new ArrayList<String>();
+        File[] dirs = directory.listFiles(filterDirectoriesOnly);
+        //Log.d("MNMNMN", dirs[1].getName());
+        for (File dir : dirs)
+        {
+            list_class.add(dir.getName());
+        }
+        return list_class;
+    }
 
 
 }

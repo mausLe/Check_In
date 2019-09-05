@@ -29,14 +29,17 @@
 
             android:textSize="23dp" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/editTextID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30dp"
             android:ems="20"
             android:hint="@string/class_name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:completionThreshold="1"
+
+            />
 
         <Button
             android:id="@+id/buttonOK"

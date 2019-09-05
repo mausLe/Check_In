@@ -139,9 +139,9 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         mBoxPaint.setColor(Color.GREEN);
-        canvas.drawCircle(x,y,2,mBoxPaint);
-        canvas.drawCircle(cx,cy,2,mBoxPaint);
-        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+//        canvas.drawCircle(x,y,2,mBoxPaint);
+//        canvas.drawCircle(cx,cy,2,mBoxPaint);
+//        canvas.drawRect(left, top, right, bottom, mBoxPaint);
         Glocal.ProgressFace=Glocal.CurrentFace;
         Glocal.ProgressFrame=Glocal.CurrentFrame;
 

@@ -1,18 +1,20 @@
 package com.google.android.gms.samples.vision.face.facetracker;
 
+import android.R.layout;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-
-import com.beardedhen.androidbootstrap.BootstrapButton;
+import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity{
-    private EditText mEdit;
+    private AutoCompleteTextView mEdit;
     private Button btn;
 
     @Override
@@ -20,7 +22,14 @@ public class MenuActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         Glocal.ApplicationContext = this;
-        mEdit = (EditText)findViewById(R.id.editTextID);
+
+        //get all folder
+        ArrayList<String> list_class = MainActivity.getAllFiles("/CHECK_IN_DATA");
+
+        //edit enter class
+        mEdit = (AutoCompleteTextView) findViewById(R.id.editTextID);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, layout.simple_list_item_1, list_class);
+        mEdit.setAdapter(adapter);
 
         btn = (Button) findViewById(R.id.buttonOK);
         btn.setOnClickListener(new View.OnClickListener(){
@@ -53,5 +62,6 @@ public class MenuActivity extends AppCompatActivity{
         super.onDestroy();
 
     }
+
 }
 
