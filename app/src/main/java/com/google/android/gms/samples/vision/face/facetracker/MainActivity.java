@@ -46,10 +46,11 @@ public class MainActivity extends AppCompatActivity {
         btnSync = (Button)findViewById(R.id.sync);
         btnRes = (Button) findViewById(R.id.regis);
         mySpin = (Spinner) findViewById(R.id.list_dir);
-//
-//        ArrayList<String> list_class = getAllFiles("/CHECK_IN_DATA");
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list_class);
-//        listv_class.setAdapter(adapter);
+
+        ArrayList<String> list_class = getAllFiles("/CHECK_IN_DATA");
+        list_class.add(0,"Choose Class ID to SYNC");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list_class);
+        mySpin.setAdapter(adapter);
 
         btnRes.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, MenuActivity.class);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }

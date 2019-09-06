@@ -182,7 +182,17 @@ public class GraphicOverlay extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // Draw a box
+
+        // Draw a circle in
+        Paint mCirIn = new Paint();
+        mCirIn.setColor(Color.WHITE);
+        mCirIn.setStyle(Paint.Style.STROKE);
+        mCirIn.setStrokeWidth(2);
+        int pad = 40;
+        RectF oval2 = new RectF(Glocal.coordEllip[0]+pad, Glocal.coordEllip[1]+pad, Glocal.coordEllip[2]-pad, Glocal.coordEllip[3]-pad);
+        canvas.drawOval(oval2, mCirIn);
+
+        // Draw a circle out
         Paint mBox;
         mBox = new Paint();
         mBox.setColor(Color.WHITE);
@@ -191,6 +201,9 @@ public class GraphicOverlay extends View {
 
         RectF oval1 = new RectF(Glocal.coordEllip[0], Glocal.coordEllip[1], Glocal.coordEllip[2], Glocal.coordEllip[3]);
         canvas.drawOval(oval1, mBox);
+
+
+
 //
 //        Paint mBoxx;
 //        mBoxx = new Paint();

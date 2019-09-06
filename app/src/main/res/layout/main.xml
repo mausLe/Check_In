@@ -35,7 +35,7 @@
         android:layout_gravity="center_horizontal"
         android:maxLines="10"
         android:padding="8dp"
-        android:textSize="24sp"
+        android:textSize="30sp"
         android:text="" />
 
     <ImageView

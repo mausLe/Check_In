@@ -4,8 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.util.Base64;
-import android.util.Log;
-import android.widget.ScrollView;
+
 
 import com.google.android.gms.vision.face.Face;
 

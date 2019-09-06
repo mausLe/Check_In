@@ -5,9 +5,7 @@
     android:versionCode="1"
     android:versionName="1">
 
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="23" />
+    <uses-sdk android:targetSdkVersion="24" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -44,8 +42,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar">
 
         </activity>
-
-        <meta-data
+	<meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
@@ -57,7 +54,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            >
+            
         </activity>
     </application>
 

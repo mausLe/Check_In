@@ -28,7 +28,7 @@ public class MenuActivity extends AppCompatActivity{
 
         //edit enter class
         mEdit = (AutoCompleteTextView) findViewById(R.id.editTextID);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, layout.simple_list_item_1, list_class);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, layout.simple_expandable_list_item_1, list_class);
         mEdit.setAdapter(adapter);
 
         btn = (Button) findViewById(R.id.buttonOK);

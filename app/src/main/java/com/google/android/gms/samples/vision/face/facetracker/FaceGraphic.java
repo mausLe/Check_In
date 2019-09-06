@@ -45,10 +45,7 @@ import static com.google.android.gms.samples.vision.face.facetracker.Ultis.GetFa
  * graphic overlay view.
  */
 class FaceGraphic extends GraphicOverlay.Graphic {
-    private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
-    private static final float ID_Y_OFFSET = 50.0f;
-    private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private static final int COLOR_CHOICES[] = {
@@ -111,7 +108,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      */
     private static final int cx = (Glocal.coordEllip[0] + Glocal.coordEllip[2])/2; // (left + right)/2
     private static final int cy = 20 + (Glocal.coordEllip[1] + Glocal.coordEllip[3])/2; //(top + bot)/2
-    private static final int radius = 30;
+    private static final int radius = 40;
 //    private Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
 
     private double dis(float x, float y){
@@ -151,13 +148,15 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         } else if (!(face.getIsLeftEyeOpenProbability()>0.8 && face.getIsRightEyeOpenProbability()>0.8)){
             Glocal.Msg.setText("Open your eyes");
             return;
-        } else if (xOffset < (cx - Glocal.coordEllip[0])){
+        } else if (xOffset < (cx - Glocal.coordEllip[0]-40)) {
             Glocal.Msg.setText("Too small face");
+            return;
+        } else if (xOffset > (cx - Glocal.coordEllip[0]+40)) {
+            Glocal.Msg.setText("Too large face");
             return;
         } else if (Glocal.inProgress && dis(x,y)<radius) {
             Glocal.inProgress=false;
             Bitmap bmp = GetFaceFromProgressFrame();
-//            Glocal.CurrentImage = GetFaceFromProgressFrame();
 
             try {
 
@@ -209,7 +208,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
 
         SimpleDateFormat time_format = new SimpleDateFormat("HH_mm_ss");
 
-        File outputFile = new File(folder_date,time_format.format(date) + ".png");
+        File outputFile = new File(folder_date,time_format.format(date) + ".jpg");
 
         FileOutputStream fo = new FileOutputStream(outputFile);
         fo.write(bytes.toByteArray());
