@@ -148,10 +148,10 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         } else if (!(face.getIsLeftEyeOpenProbability()>0.8 && face.getIsRightEyeOpenProbability()>0.8)){
             Glocal.Msg.setText("Open your eyes");
             return;
-        } else if (xOffset < (cx - Glocal.coordEllip[0]-40)) {
+        } else if (xOffset < (cx - Glocal.coordEllip[0]-50)) {
             Glocal.Msg.setText("Too small face");
             return;
-        } else if (xOffset > (cx - Glocal.coordEllip[0]+40)) {
+        } else if (xOffset > (cx - Glocal.coordEllip[0]+50)) {
             Glocal.Msg.setText("Too large face");
             return;
         } else if (Glocal.inProgress && dis(x,y)<radius) {

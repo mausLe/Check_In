@@ -24,7 +24,7 @@ public class MenuActivity extends AppCompatActivity{
         Glocal.ApplicationContext = this;
 
         //get all folder
-        ArrayList<String> list_class = MainActivity.getAllFiles("/CHECK_IN_DATA");
+        ArrayList<String> list_class = MainActivity.getAllFiles("/CHECK_IN_DATA",true);
 
         //edit enter class
         mEdit = (AutoCompleteTextView) findViewById(R.id.editTextID);
