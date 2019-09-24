@@ -34,8 +34,11 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -57,12 +60,9 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 public final class FaceTrackerActivity extends AppCompatActivity {
@@ -97,25 +97,28 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.main);
 
-        Glocal.viewresult = (ImageView) findViewById(R.id.imageView3);
-        Glocal.status = (ImageView) findViewById(R.id.imageView4);
-        Glocal.numofsv = (TextView) findViewById(R.id.numberSV);
+        Glocal.viewresult = findViewById(R.id.imageView3);
+        Glocal.status = findViewById(R.id.imageView4);
+        Glocal.numofsv = findViewById(R.id.numberSV);
         Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
 
 
-        Glocal.Msg= (TextView) findViewById(R.id.msg);
-        btnFinish = (Button)findViewById(R.id.btnfinish);
+        Glocal.Msg= findViewById(R.id.msg);
+        btnFinish = findViewById(R.id.btnfinish);
 
-        NameClass = (TextView)findViewById(R.id.nameClass);
+        NameClass = findViewById(R.id.nameClass);
         NameClass.setText(Glocal.ClassID);
 
 
         /////
-        //showAlertDialog();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        Glocal.heightScreen = displayMetrics.heightPixels;
+        Glocal.widthScreen = displayMetrics.widthPixels;
         /////
 
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+        mPreview = findViewById(R.id.preview);
+        mGraphicOverlay = findViewById(R.id.faceOverlay);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -126,15 +129,29 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             requestCameraPermission();
         }
 
+
         btnFinish.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                AlertDialog alertDialog = new AlertDialog.Builder(FaceTrackerActivity.this).create();
+                alertDialog.setTitle(R.string.nameApp);
+                alertDialog.setMessage(Glocal.NumOfSV.toString() + " Captured Image!");
+                alertDialog.setButton(Dialog.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(FaceTrackerActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
 
-                Intent intent = new Intent(FaceTrackerActivity.this, MainActivity.class);
+                alertDialog.show();
+                alertDialog.getButton(Dialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP,36.0f);
+                TextView textView = alertDialog.findViewById(android.R.id.message);
+                textView.setTextSize(36);
+                textView.setGravity(Gravity.CENTER_HORIZONTAL);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
             }
         });
 

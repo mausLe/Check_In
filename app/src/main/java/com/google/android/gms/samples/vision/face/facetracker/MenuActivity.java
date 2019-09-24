@@ -27,11 +27,11 @@ public class MenuActivity extends AppCompatActivity{
         ArrayList<String> list_class = MainActivity.getAllFiles("/CHECK_IN_DATA",true);
 
         //edit enter class
-        mEdit = (AutoCompleteTextView) findViewById(R.id.editTextID);
+        mEdit = findViewById(R.id.editTextID);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, layout.simple_expandable_list_item_1, list_class);
         mEdit.setAdapter(adapter);
 
-        btn = (Button) findViewById(R.id.buttonOK);
+        btn = findViewById(R.id.buttonOK);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

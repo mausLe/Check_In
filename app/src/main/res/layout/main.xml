@@ -71,8 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="620dp"
-        android:layout_marginLeft="460dp"
-        android:textSize="24dp"
+        android:layout_marginLeft="400dp"
+        android:textSize="34dp"
         android:text="0" />
 
     <Button

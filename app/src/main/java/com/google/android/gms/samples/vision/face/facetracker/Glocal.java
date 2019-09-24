@@ -20,8 +20,12 @@ public final class Glocal {
     public static Bitmap ProgressFrame;
     public static Face ProgressFace;
     public static String ClassID="0";
-    public static int[] coordEllip = {150,40,450,440}; //left,top,right,bottom
+    public static int[] coordEllip = {150,80,450,440}; //left,top,right,bottom
     @SuppressLint("StaticFieldLeak")
     public static TextView Msg;
+    public static Boolean isSyncing = true;
+    public static int heightScreen = 0;
+    public static int widthScreen = 0;
+
 
 }

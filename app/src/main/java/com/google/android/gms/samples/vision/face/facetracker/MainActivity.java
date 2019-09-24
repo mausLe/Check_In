@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask;
+
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,14 +22,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static com.google.android.gms.samples.vision.face.facetracker.Ultis.BitmapToBase64;
 
@@ -38,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnRes;
     private Button btnSync;
     private Spinner mySpin;
-    private  boolean isSyncing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         Glocal.NumOfSV=0;
 
-        btnSync = (Button)findViewById(R.id.sync);
-        btnRes = (Button) findViewById(R.id.regis);
-        mySpin = (Spinner) findViewById(R.id.list_dir);
+        btnSync = findViewById(R.id.sync);
+        btnRes = findViewById(R.id.regis);
+        mySpin = findViewById(R.id.list_dir);
 
         ArrayList<String> list_class = getAllFiles("/CHECK_IN_DATA",true);
         list_class.add(0,"Select class to sync");
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else
                 {
-                    isSyncing = true;
+                    Glocal.isSyncing=true;
                     String class_dir = mySpin.getSelectedItem().toString();
                     syncImage(class_dir);
                 }
@@ -97,12 +93,25 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = list_date.size() - 1; i >= 0; i--)
         {
-            if (isSyncing)
-            {
-                String path_date = "/CHECK_IN_DATA/"+class_dir+ "/" + list_date.get(i);
-                JSONObject json_data_imgs = createJSON_IMG(path_date);
+            String path_date = "/CHECK_IN_DATA/"+class_dir+ "/" + list_date.get(i);
+            JSONObject json_data_imgs = createJSON_IMG(path_date);
 
-                new SendDeviceDetails().execute("http://192.168.20.170:5000/syncImage", json_data_imgs.toString());
+//            Log.e("RESULT_SYNC", path_date);
+            SendDeviceDetails SendData = new SendDeviceDetails();
+            SendData.execute("http://192.168.20.170:5000/syncImage", json_data_imgs.toString());
+            String serverResult="";
+            try {
+                serverResult = SendData.get();
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }catch (ExecutionException e)
+            {
+                e.printStackTrace();
+            }
+            if  (serverResult.length() == 4)
+            {
+                break;
             }
 
         }
@@ -140,61 +149,6 @@ public class MainActivity extends AppCompatActivity {
 
         return data_json_imgs;
     }
-    private class SendDeviceDetails extends AsyncTask<String, Void, String> {
-        private boolean isSyncing = true;
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String data = "";
-
-            HttpURLConnection httpURLConnection = null;
-            try {
-
-                httpURLConnection = (HttpURLConnection) new URL(params[0]).openConnection();
-                httpURLConnection.setRequestMethod("POST");
-
-                httpURLConnection.setRequestProperty("Content-Type", "application/json");
-                httpURLConnection.setRequestProperty("Accept", "application/json");
-                httpURLConnection.setDoOutput(true);
-
-                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-//                JSONObject postJson = new JSONObject();
-//                postJson.put("name", params[1]);
-                wr.write(params[1].getBytes());
-                wr.flush();
-                wr.close();
-
-                InputStream in = httpURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-
-                int inputStreamData = inputStreamReader.read();
-                while (inputStreamData != -1) {
-                    char current = (char) inputStreamData;
-                    inputStreamData = inputStreamReader.read();
-                    data += current;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-            }
-
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result=="F")
-            {
-                isSyncing=false;
-            }
-            Log.e("RESULT_SYNC", result); // this is expecting a response code to be sent from your server upon receiving the POST data
-        }
-    }
 
     public static ArrayList<String> getAllFiles(String _path, boolean isDir)
     {
@@ -209,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         };
         File[] dirs;
         ArrayList<String> list_class = new ArrayList<String>();
+
         if (isDir) {
             dirs = directory.listFiles(filterDirectoriesOnly);
         }
@@ -216,11 +171,17 @@ public class MainActivity extends AppCompatActivity {
         {
             dirs = directory.listFiles();
         }
-        //Log.d("MNMNMN", dirs[1].getName());
-        for (File dir : dirs)
+        try {
+            //Log.d("MNMNMN", dirs[1].getName());
+            for (File dir : dirs)
+            {
+                list_class.add(dir.getName());
+            }
+        }catch (NullPointerException e)
         {
-            list_class.add(dir.getName());
+            e.printStackTrace();
         }
+
         return list_class;
     }
 

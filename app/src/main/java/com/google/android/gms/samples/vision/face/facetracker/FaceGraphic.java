@@ -108,7 +108,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      */
     private static final int cx = (Glocal.coordEllip[0] + Glocal.coordEllip[2])/2; // (left + right)/2
     private static final int cy = 20 + (Glocal.coordEllip[1] + Glocal.coordEllip[3])/2; //(top + bot)/2
-    private static final int radius = 40;
+    private static final int radius = 100;
 //    private Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
 
     private double dis(float x, float y){
@@ -136,9 +136,9 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         mBoxPaint.setColor(Color.GREEN);
-//        canvas.drawCircle(x,y,2,mBoxPaint);
-//        canvas.drawCircle(cx,cy,2,mBoxPaint);
-//        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        canvas.drawCircle(x,y,2,mBoxPaint);
+        canvas.drawCircle(cx,cy,2,mBoxPaint);
+        canvas.drawRect(left, top, right, bottom, mBoxPaint);
         Glocal.ProgressFace=Glocal.CurrentFace;
         Glocal.ProgressFrame=Glocal.CurrentFrame;
 
@@ -148,10 +148,10 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         } else if (!(face.getIsLeftEyeOpenProbability()>0.8 && face.getIsRightEyeOpenProbability()>0.8)){
             Glocal.Msg.setText("Open your eyes");
             return;
-        } else if (xOffset < (cx - Glocal.coordEllip[0]-50)) {
+        } else if (xOffset < (cx - Glocal.coordEllip[0]-30)) {
             Glocal.Msg.setText("Too small face");
             return;
-        } else if (xOffset > (cx - Glocal.coordEllip[0]+50)) {
+        } else if (xOffset > (cx - Glocal.coordEllip[0]+70)) {
             Glocal.Msg.setText("Too large face");
             return;
         } else if (Glocal.inProgress && dis(x,y)<radius) {
