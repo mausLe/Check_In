@@ -28,7 +28,7 @@ public final class Ultis {
     }
     public static Bitmap GetFaceFromFrameAndFace(Bitmap bitmap,Face face){
         Matrix matrix = new Matrix();
-        matrix.setRotate(90);
+        matrix.setRotate(270);
         Bitmap Src = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         //end rotate
 

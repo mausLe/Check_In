@@ -181,7 +181,11 @@ public class GraphicOverlay extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        //Ellip dimension
+        Glocal.coordEllip[0] = Glocal.widthScreen/4;//left
+        Glocal.coordEllip[1] = Glocal.widthScreen*2/15;//top
+        Glocal.coordEllip[2] = Glocal.widthScreen*3/4;//right
+        Glocal.coordEllip[3] = Glocal.widthScreen*11/15;//bottom
 
         // Draw a circle in
         Paint mCirIn = new Paint();

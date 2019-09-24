@@ -17,6 +17,7 @@ package com.google.android.gms.samples.vision.face.facetracker;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -41,6 +42,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -103,6 +105,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
 
 
+
         Glocal.Msg= findViewById(R.id.msg);
         btnFinish = findViewById(R.id.btnfinish);
 
@@ -110,15 +113,22 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         NameClass.setText(Glocal.ClassID);
 
 
-        /////
+        /////get dimension
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         Glocal.heightScreen = displayMetrics.heightPixels;
         Glocal.widthScreen = displayMetrics.widthPixels;
+
         /////
 
         mPreview = findViewById(R.id.preview);
         mGraphicOverlay = findViewById(R.id.faceOverlay);
+
+        //set size of mPreview
+        ViewGroup.LayoutParams params = mPreview.getLayoutParams();
+        params.height = Glocal.widthScreen;
+        params.width = Glocal.widthScreen;
+        mPreview.setLayoutParams(params);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.

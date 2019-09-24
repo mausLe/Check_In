@@ -41,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //create save folder
+        File folder_data = new File(Environment.getExternalStorageDirectory() + File.separator + "CHECK_IN_DATA");
+        if (!folder_data.exists())
+        {
+            folder_data.mkdir();
+            Log.d("create","YES");
+        }
+
+
         Glocal.NumOfSV=0;
 
         btnSync = findViewById(R.id.sync);

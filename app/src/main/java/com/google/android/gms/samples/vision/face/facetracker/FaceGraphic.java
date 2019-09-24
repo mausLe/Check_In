@@ -26,7 +26,9 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
@@ -108,7 +110,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      */
     private static final int cx = (Glocal.coordEllip[0] + Glocal.coordEllip[2])/2; // (left + right)/2
     private static final int cy = 20 + (Glocal.coordEllip[1] + Glocal.coordEllip[3])/2; //(top + bot)/2
-    private static final int radius = 100;
+    private static final int radius = 40;
 //    private Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
 
     private double dis(float x, float y){
@@ -136,9 +138,10 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         mBoxPaint.setColor(Color.GREEN);
-        canvas.drawCircle(x,y,2,mBoxPaint);
-        canvas.drawCircle(cx,cy,2,mBoxPaint);
-        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+//        canvas.drawCircle(x,y,2,mBoxPaint);
+//        canvas.drawCircle(cx,cy,2,mBoxPaint);
+//        canvas.drawRect(left, top, right, bottom, mBoxPaint);
+
         Glocal.ProgressFace=Glocal.CurrentFace;
         Glocal.ProgressFrame=Glocal.CurrentFrame;
 
@@ -167,6 +170,20 @@ class FaceGraphic extends GraphicOverlay.Graphic {
                 Glocal.viewresult.setImageBitmap(bmp);
                 Glocal.status.setImageResource(R.drawable.confirm);
 
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do something after 5s = 5000ms
+                        Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Glocal.ApplicationContext.startActivity(intent);
+                    }
+                }, 1500);
+
+
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -182,12 +199,12 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-        //Create root folder
+//        //Create root folder
         File folder_data = new File(Environment.getExternalStorageDirectory() + File.separator + "CHECK_IN_DATA");
-        if (!folder_data.exists())
-        {
-            folder_data.mkdir();
-        }
+//        if (!folder_data.exists())
+//        {
+//            folder_data.mkdir();
+//        }
 
         //Create class folder
         File folder_class = new File(folder_data,Glocal.ClassID.toUpperCase());
@@ -217,9 +234,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         toneGen1.startTone(ToneGenerator.TONE_SUP_PIP,150);
 
-        Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Glocal.ApplicationContext.startActivity(intent);
+
 
     }
 
