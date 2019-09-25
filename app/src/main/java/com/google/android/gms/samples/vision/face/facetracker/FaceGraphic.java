@@ -169,6 +169,10 @@ class FaceGraphic extends GraphicOverlay.Graphic {
                 Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
                 Glocal.viewresult.setImageBitmap(bmp);
                 Glocal.status.setImageResource(R.drawable.confirm);
+//
+//                Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                Glocal.ApplicationContext.startActivity(intent);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {

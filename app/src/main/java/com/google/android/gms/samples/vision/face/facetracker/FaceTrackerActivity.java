@@ -130,6 +130,33 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         params.width = Glocal.widthScreen;
         mPreview.setLayoutParams(params);
 
+        //set position of imageview
+        Glocal.viewresult.setX(Glocal.widthScreen/20);
+        Glocal.viewresult.setY(Glocal.widthScreen*7/8+Glocal.heightScreen/8);
+        ViewGroup.LayoutParams params_iv = Glocal.viewresult.getLayoutParams();
+        params_iv.height=Glocal.widthScreen*2/5;
+        params_iv.width=Glocal.widthScreen*2/5;
+
+        Glocal.viewresult.setLayoutParams(params_iv);
+
+        //set position of status
+        Glocal.status.setX(Glocal.widthScreen*11/20);
+        Glocal.status.setY(Glocal.widthScreen*7/8+Glocal.heightScreen/7);
+
+        ViewGroup.LayoutParams params_st = Glocal.viewresult.getLayoutParams();
+        params_st.height=Glocal.widthScreen/3;
+        params_st.width=Glocal.widthScreen/3;
+        Glocal.status.setLayoutParams(params_st);
+        //set position of classid text
+        NameClass.setX(Glocal.widthScreen/5);
+        NameClass.setY(Glocal.widthScreen*1.03f);
+
+        //set position of counter text
+        Glocal.numofsv.setX(Glocal.widthScreen*5/8);
+        Glocal.numofsv.setY(Glocal.widthScreen*1.02f);
+        //set position of msg
+        Glocal.Msg.setY(Glocal.widthScreen*0.9f);
+
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
         minSdkVersion 17
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -16,13 +16,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    splits {
+//        abi {
+//            enable true
+//            reset()
+//            include 'x86', 'armeabi-v7a'
+//            universalApk true
+//        }
+//    }
+
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     implementation 'com.google.android.gms:play-services-vision:7.8+'
-    implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
+//    implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

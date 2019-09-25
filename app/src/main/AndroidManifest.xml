@@ -19,6 +19,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:label="ALGO BootCamp"
+        android:usesCleartextTraffic="true"
         android:screenOrientation="portrait">
         <activity
             android:name=".MainActivity"
