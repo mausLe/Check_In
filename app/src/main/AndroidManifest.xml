@@ -37,7 +37,7 @@
 
         </activity>
         <activity
-            android:name=".MenuActivity"
+            android:name=".EnterClassActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">

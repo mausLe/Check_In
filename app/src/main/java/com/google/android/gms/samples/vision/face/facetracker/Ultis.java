@@ -21,10 +21,10 @@ public final class Ultis {
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
     public static Bitmap GetFaceFromProgressFrame(){
-        return GetFaceFromFrameAndFace(Glocal.ProgressFrame,Glocal.ProgressFace);
+        return GetFaceFromFrameAndFace(Global.ProgressFrame, Global.ProgressFace);
     }
     public static Bitmap GetFaceFromCurrentFrame(){
-        return GetFaceFromFrameAndFace(Glocal.CurrentFrame,Glocal.CurrentFace);
+        return GetFaceFromFrameAndFace(Global.CurrentFrame, Global.CurrentFace);
     }
     public static Bitmap GetFaceFromFrameAndFace(Bitmap bitmap,Face face){
         Matrix matrix = new Matrix();

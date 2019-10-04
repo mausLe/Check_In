@@ -17,7 +17,6 @@ package com.google.android.gms.samples.vision.face.facetracker;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,14 +39,11 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview;
@@ -99,25 +95,25 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.main);
 
-        Glocal.viewresult = findViewById(R.id.imageView3);
-        Glocal.status = findViewById(R.id.imageView4);
-        Glocal.numofsv = findViewById(R.id.numberSV);
-        Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
+        Global.viewresult = findViewById(R.id.imageView3);
+        Global.status = findViewById(R.id.imageView4);
+        Global.numofsv = findViewById(R.id.numberSV);
+        Global.numofsv.setText("Count: " + Global.NumOfSV.toString());
 
 
 
-        Glocal.Msg= findViewById(R.id.msg);
+        Global.Msg= findViewById(R.id.msg);
         btnFinish = findViewById(R.id.btnfinish);
 
         NameClass = findViewById(R.id.nameClass);
-        NameClass.setText(Glocal.ClassID);
+        NameClass.setText(Global.ClassID);
 
 
         /////get dimension
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Glocal.heightScreen = displayMetrics.heightPixels;
-        Glocal.widthScreen = displayMetrics.widthPixels;
+        Global.heightScreen = displayMetrics.heightPixels;
+        Global.widthScreen = displayMetrics.widthPixels;
 
         /////
 
@@ -126,36 +122,36 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         //set size of mPreview
         ViewGroup.LayoutParams params = mPreview.getLayoutParams();
-        params.height = Glocal.widthScreen;
-        params.width = Glocal.widthScreen;
+        params.height = Global.widthScreen;
+        params.width = Global.widthScreen;
         mPreview.setLayoutParams(params);
 
         //set position of imageview
-        Glocal.viewresult.setX(Glocal.widthScreen/20);
-        Glocal.viewresult.setY(Glocal.widthScreen*7/8+Glocal.heightScreen/8);
-        ViewGroup.LayoutParams params_iv = Glocal.viewresult.getLayoutParams();
-        params_iv.height=Glocal.widthScreen*2/5;
-        params_iv.width=Glocal.widthScreen*2/5;
+        Global.viewresult.setX(Global.widthScreen/20);
+        Global.viewresult.setY(Global.widthScreen*7/8+ Global.heightScreen/8);
+        ViewGroup.LayoutParams params_iv = Global.viewresult.getLayoutParams();
+        params_iv.height= Global.widthScreen*2/5;
+        params_iv.width= Global.widthScreen*2/5;
 
-        Glocal.viewresult.setLayoutParams(params_iv);
+        Global.viewresult.setLayoutParams(params_iv);
 
         //set position of status
-        Glocal.status.setX(Glocal.widthScreen*11/20);
-        Glocal.status.setY(Glocal.widthScreen*7/8+Glocal.heightScreen/7);
+        Global.status.setX(Global.widthScreen*11/20);
+        Global.status.setY(Global.widthScreen*7/8+ Global.heightScreen/7);
 
-        ViewGroup.LayoutParams params_st = Glocal.viewresult.getLayoutParams();
-        params_st.height=Glocal.widthScreen/3;
-        params_st.width=Glocal.widthScreen/3;
-        Glocal.status.setLayoutParams(params_st);
+        ViewGroup.LayoutParams params_st = Global.viewresult.getLayoutParams();
+        params_st.height= Global.widthScreen/3;
+        params_st.width= Global.widthScreen/3;
+        Global.status.setLayoutParams(params_st);
         //set position of classid text
-        NameClass.setX(Glocal.widthScreen/5);
-        NameClass.setY(Glocal.widthScreen*1.03f);
+        NameClass.setX(Global.widthScreen/5);
+        NameClass.setY(Global.widthScreen*1.03f);
 
         //set position of counter text
-        Glocal.numofsv.setX(Glocal.widthScreen*5/8);
-        Glocal.numofsv.setY(Glocal.widthScreen*1.02f);
+        Global.numofsv.setX(Global.widthScreen*5/8);
+        Global.numofsv.setY(Global.widthScreen*1.02f);
         //set position of msg
-        Glocal.Msg.setY(Glocal.widthScreen*0.9f);
+        Global.Msg.setY(Global.widthScreen*0.9f);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -172,7 +168,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog alertDialog = new AlertDialog.Builder(FaceTrackerActivity.this).create();
                 alertDialog.setTitle(R.string.nameApp);
-                alertDialog.setMessage(Glocal.NumOfSV.toString() + " Captured Image!");
+                alertDialog.setMessage(Global.NumOfSV.toString() + " Captured Image!");
                 alertDialog.setButton(Dialog.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -272,7 +268,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        Glocal.Msg.setText("Wait for face");
+        Global.Msg.setText("Wait for face");
         super.onResume();
         startCameraSource();
     }
@@ -509,7 +505,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(), frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
             byte[] jpegArray = byteArrayOutputStream.toByteArray();
-            Glocal.CurrentFrame = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
+            Global.CurrentFrame = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
             return mDelegate.detect(frame);
 
         }

@@ -2,18 +2,15 @@ package com.google.android.gms.samples.vision.face.facetracker;
 
 import android.R.layout;
 import android.content.Intent;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import java.util.ArrayList;
 
-public class MenuActivity extends AppCompatActivity{
+public class EnterClassActivity extends AppCompatActivity{
     private AutoCompleteTextView mEdit;
     private Button btn;
 
@@ -21,7 +18,7 @@ public class MenuActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        Glocal.ApplicationContext = this;
+        Global.ApplicationContext = this;
 
         //get all folder
         ArrayList<String> list_class = MainActivity.getAllFiles("/CHECK_IN_DATA",true);
@@ -36,8 +33,8 @@ public class MenuActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if(validateFields()){
-                    Glocal.ClassID = mEdit.getText().toString();
-                    Intent intent = new Intent(MenuActivity.this, FaceTrackerActivity.class);
+                    Global.ClassID = mEdit.getText().toString();
+                    Intent intent = new Intent(EnterClassActivity.this, FaceTrackerActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();

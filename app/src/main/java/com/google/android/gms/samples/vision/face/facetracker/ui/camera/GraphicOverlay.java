@@ -15,19 +15,15 @@
  */
 package com.google.android.gms.samples.vision.face.facetracker.ui.camera;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity;
-import com.google.android.gms.samples.vision.face.facetracker.Glocal;
-import com.google.android.gms.samples.vision.face.facetracker.R;
+import com.google.android.gms.samples.vision.face.facetracker.Global;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.HashSet;
@@ -182,10 +178,10 @@ public class GraphicOverlay extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //Ellip dimension
-        Glocal.coordEllip[0] = Glocal.widthScreen/4;//left
-        Glocal.coordEllip[1] = Glocal.widthScreen*2/15;//top
-        Glocal.coordEllip[2] = Glocal.widthScreen*3/4;//right
-        Glocal.coordEllip[3] = Glocal.widthScreen*11/15;//bottom
+        Global.coordEllip[0] = Global.widthScreen/4;//left
+        Global.coordEllip[1] = Global.widthScreen*2/15;//top
+        Global.coordEllip[2] = Global.widthScreen*3/4;//right
+        Global.coordEllip[3] = Global.widthScreen*11/15;//bottom
 
         // Draw a circle in
         Paint mCirIn = new Paint();
@@ -193,7 +189,7 @@ public class GraphicOverlay extends View {
         mCirIn.setStyle(Paint.Style.STROKE);
         mCirIn.setStrokeWidth(2);
         int pad = 40;
-        RectF oval2 = new RectF(Glocal.coordEllip[0]+pad, Glocal.coordEllip[1]+pad, Glocal.coordEllip[2]-pad, Glocal.coordEllip[3]-pad);
+        RectF oval2 = new RectF(Global.coordEllip[0]+pad, Global.coordEllip[1]+pad, Global.coordEllip[2]-pad, Global.coordEllip[3]-pad);
         canvas.drawOval(oval2, mCirIn);
 
         // Draw a circle out
@@ -203,7 +199,7 @@ public class GraphicOverlay extends View {
         mBox.setStyle(Paint.Style.STROKE);
         mBox.setStrokeWidth(3);
 
-        RectF oval1 = new RectF(Glocal.coordEllip[0], Glocal.coordEllip[1], Glocal.coordEllip[2], Glocal.coordEllip[3]);
+        RectF oval1 = new RectF(Global.coordEllip[0], Global.coordEllip[1], Global.coordEllip[2], Global.coordEllip[3]);
         canvas.drawOval(oval1, mBox);
 
 

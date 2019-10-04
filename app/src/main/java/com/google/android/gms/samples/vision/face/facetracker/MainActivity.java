@@ -1,10 +1,12 @@
 package com.google.android.gms.samples.vision.face.facetracker;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,11 +24,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileFilter;
-
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static com.google.android.gms.samples.vision.face.facetracker.Ultis.BitmapToBase64;
 
@@ -35,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private Button btnRes;
     private Button btnSync;
     private Spinner mySpin;
+    private ProgressDialog progressDialog;
+    protected String class_path;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,24 +70,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Glocal.NumOfSV=0;
+        Global.NumOfSV=0;
 
         btnSync = findViewById(R.id.sync);
         btnRes = findViewById(R.id.regis);
         mySpin = findViewById(R.id.list_dir);
 
-        ArrayList<String> list_class = getAllFiles("/CHECK_IN_DATA",true);
+        final ArrayList<String> list_class = getAllFiles("/CHECK_IN_DATA",true);
         list_class.add(0,"Select class to sync");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list_class);
         mySpin.setAdapter(adapter);
+
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
 
         btnRes.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+                Intent intent = new Intent(MainActivity.this, EnterClassActivity.class);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                 startActivity(intent);
                 finish();
             }
@@ -84,9 +108,10 @@ public class MainActivity extends AppCompatActivity {
 
                 } else
                 {
-                    Glocal.isSyncing=true;
                     String class_dir = mySpin.getSelectedItem().toString();
-                    syncImage(class_dir);
+                    SyncingImages syncImg = new SyncingImages();
+                    class_path = "/CHECK_IN_DATA/" + class_dir;
+                    syncImg.execute(class_path);
                 }
 
 
@@ -96,35 +121,114 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void syncImage(String class_dir)
+    public ArrayList<String> getSyncLogFile(String class_path)
     {
-        ArrayList<String> list_date = getAllFiles("/CHECK_IN_DATA/"+class_dir,true);
+        String path_log = Environment.getExternalStorageDirectory().toString() + class_path + "/SYNC.LOG";
+        ArrayList<String> list_synced_date = new ArrayList<>();
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(path_log));
+            String line = reader.readLine();
+            while (line != null)
+            {
+                list_synced_date.add(line);
+                line=reader.readLine();
+            }
+            reader.close();
+            return list_synced_date;
 
-        for (int i = list_date.size() - 1; i >= 0; i--)
+
+        }catch (IOException e)
         {
-            String path_date = "/CHECK_IN_DATA/"+class_dir+ "/" + list_date.get(i);
-            JSONObject json_data_imgs = createJSON_IMG(path_date);
-
-//            Log.e("RESULT_SYNC", path_date);
-            SendDeviceDetails SendData = new SendDeviceDetails();
-            SendData.execute("http://192.168.20.170:5000/syncImage", json_data_imgs.toString());
-            String serverResult="";
-            try {
-                serverResult = SendData.get();
-            } catch (InterruptedException e)
+            e.printStackTrace();
+            return list_synced_date;
+        }
+    }
+    public ArrayList<String> getSyncDate(String class_path)
+    {
+        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> list_class_log = getSyncLogFile(class_path);
+        //Log.d("MNMN_log", list_class_log.toString());
+        ArrayList<String> list_all_date = getAllFiles(class_path, true);
+        //Log.d("MNMN_all", list_all_date.toString());
+        for (String date:list_all_date)
+        {
+            if (!list_class_log.contains(date))
             {
-                e.printStackTrace();
-            }catch (ExecutionException e)
-            {
-                e.printStackTrace();
+                result.add(date);
             }
-            if  (serverResult.length() == 4)
-            {
-                break;
-            }
+        }
+        return result;
 
+
+    }
+    public void writeSyncedDate(String path_save,ArrayList<String> list_save)
+    {
+        try {
+            FileWriter fw = new FileWriter(path_save,true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            //PrintWriter out = new PrintWriter(bw);
+
+            for(String str: list_save) {
+                fw.write(str+"\n");
+            }
+            fw.close();
+            bw.close();
+            //out.close();
+        }catch (IOException e)
+        {
+            e.printStackTrace();
         }
 
+    }
+
+    public static ArrayList<String> getAllFiles(String _path, boolean isDir)
+    {
+        //isDir = true: Find Folder; false: find Files
+        String path = Environment.getExternalStorageDirectory().toString() + _path;
+        //Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        FileFilter filterDirectoriesOnly = new FileFilter() {
+            public boolean accept(File file) {
+                return file.isDirectory();
+            }
+        };
+        File[] dirs;
+        ArrayList<String> list_class = new ArrayList<>();
+
+        if (isDir) {
+            dirs = directory.listFiles(filterDirectoriesOnly);
+        }
+        else
+        {
+            dirs = directory.listFiles();
+        }
+        try {
+            //Log.d("MNMNMN", dirs[1].getName());
+            for (File dir : dirs)
+            {
+                list_class.add(dir.getName());
+            }
+        }catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+
+        Collections.sort(list_class, new Comparator<String>() {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");
+            @Override
+            public int compare(String d1, String d2) {
+                try {
+                    return dateFormat.parse(d1).compareTo(dateFormat.parse(d2));
+                } catch (ParseException e)
+                {
+                    e.printStackTrace();
+                    return 0;
+                }
+
+            }
+        });
+        return list_class;
     }
 
     public JSONObject createJSON_IMG(String path_date)
@@ -159,40 +263,86 @@ public class MainActivity extends AppCompatActivity {
         return data_json_imgs;
     }
 
-    public static ArrayList<String> getAllFiles(String _path, boolean isDir)
-    {
-        //isDir = true: Find Folder; false: find Files
-        String path = Environment.getExternalStorageDirectory().toString() + _path;
-        //Log.d("Files", "Path: " + path);
-        File directory = new File(path);
-        FileFilter filterDirectoriesOnly = new FileFilter() {
-            public boolean accept(File file) {
-                return file.isDirectory();
-            }
-        };
-        File[] dirs;
-        ArrayList<String> list_class = new ArrayList<String>();
+    public class SyncingImages extends AsyncTask<String, Void, ArrayList<String>> {
 
-        if (isDir) {
-            dirs = directory.listFiles(filterDirectoriesOnly);
-        }
-        else
-        {
-            dirs = directory.listFiles();
-        }
-        try {
-            //Log.d("MNMNMN", dirs[1].getName());
-            for (File dir : dirs)
+        @Override
+        protected ArrayList<String> doInBackground(String... params) {
+            ArrayList<String> list_sync_date = getSyncDate(params[0]);
+            Log.d("ListSyncDate", list_sync_date.toString());
+
+            for (String date: list_sync_date)
             {
-                list_class.add(dir.getName());
+                JSONObject json_data_imgs = createJSON_IMG(params[0]+"/"+date);
+                String result = sendJSON2("http://192.168.20.170:5000/syncImage",json_data_imgs.toString());
             }
-        }catch (NullPointerException e)
-        {
-            e.printStackTrace();
+
+
+
+            return list_sync_date;
         }
 
-        return list_class;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setMessage("prepare...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            super.onPostExecute(result);
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+            Log.d("RESULTTTT",result.toString());
+            Log.d("RESLKLK", class_path);
+            writeSyncedDate(Environment.getExternalStorageDirectory().toString() + class_path+"/SYNC.LOG",result);
+            // this is expecting a response code to be sent from your server upon receiving the POST data
+        }
     }
 
+    public String sendJSON2(String api_server, String json_data)
+    {
+        String data = "";
+
+        HttpURLConnection httpURLConnection = null;
+        try {
+
+            httpURLConnection = (HttpURLConnection) new URL(api_server).openConnection();
+            httpURLConnection.setRequestMethod("POST");
+
+            httpURLConnection.setRequestProperty("Content-Type", "application/json");
+            httpURLConnection.setRequestProperty("Accept", "application/json");
+            httpURLConnection.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+
+            wr.write(json_data.getBytes());
+            wr.flush();
+            wr.close();
+
+            InputStream in = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+
+            int inputStreamData = inputStreamReader.read();
+            while (inputStreamData != -1) {
+                char current = (char) inputStreamData;
+                inputStreamData = inputStreamReader.read();
+                data += current;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
+
+        return data;
+    }
 
 }

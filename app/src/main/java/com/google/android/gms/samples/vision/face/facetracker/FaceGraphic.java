@@ -28,7 +28,6 @@ import android.media.ToneGenerator;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
@@ -108,10 +107,10 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     /**
      * Draws the face annotations for position on the supplied canvas.
      */
-    private static final int cx = (Glocal.coordEllip[0] + Glocal.coordEllip[2])/2; // (left + right)/2
-    private static final int cy = 20 + (Glocal.coordEllip[1] + Glocal.coordEllip[3])/2; //(top + bot)/2
+    private static final int cx = (Global.coordEllip[0] + Global.coordEllip[2])/2; // (left + right)/2
+    private static final int cy = (Global.coordEllip[1] + Global.coordEllip[3])/2; //(top + bot)/2
     private static final int radius = 40;
-//    private Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
+//    private Intent intent = new Intent(Global.ApplicationContext, FaceTrackerActivity.class);
 
     private double dis(float x, float y){
         return Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
@@ -121,11 +120,11 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     public void draw(Canvas canvas) {
         Face face = mFace;
         if (face == null) {
-            Glocal.Msg.setText("Wait for face");
+            Global.Msg.setText("Wait for face");
             return;
         }
 
-        Glocal.CurrentFace=face;
+        Global.CurrentFace=face;
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
@@ -142,46 +141,46 @@ class FaceGraphic extends GraphicOverlay.Graphic {
 //        canvas.drawCircle(cx,cy,2,mBoxPaint);
 //        canvas.drawRect(left, top, right, bottom, mBoxPaint);
 
-        Glocal.ProgressFace=Glocal.CurrentFace;
-        Glocal.ProgressFrame=Glocal.CurrentFrame;
+        Global.ProgressFace= Global.CurrentFace;
+        Global.ProgressFrame= Global.CurrentFrame;
 
         if (dis(x,y)>radius){
-            Glocal.Msg.setText("Fit your face in box");
+            Global.Msg.setText("Fit your face in box");
             return;
-        } else if (!(face.getIsLeftEyeOpenProbability()>0.8 && face.getIsRightEyeOpenProbability()>0.8)){
-            Glocal.Msg.setText("Open your eyes");
+        } else if (!(face.getIsLeftEyeOpenProbability()>0.7 && face.getIsRightEyeOpenProbability()>0.7)){
+            Global.Msg.setText("Open your eyes");
             return;
-        } else if (xOffset < (cx - Glocal.coordEllip[0]-30)) {
-            Glocal.Msg.setText("Too small face");
+        } else if (xOffset < (cx - Global.coordEllip[0]-30)) {
+            Global.Msg.setText("Too small face");
             return;
-        } else if (xOffset > (cx - Glocal.coordEllip[0]+70)) {
-            Glocal.Msg.setText("Too large face");
+        } else if (xOffset > (cx - Global.coordEllip[0]+70)) {
+            Global.Msg.setText("Too large face");
             return;
-        } else if (Glocal.inProgress && dis(x,y)<radius) {
-            Glocal.inProgress=false;
+        } else if (Global.inProgress && dis(x,y)<radius) {
+            Global.inProgress=false;
             Bitmap bmp = GetFaceFromProgressFrame();
 
             try {
 
                 savebitmap(bmp);
-                Glocal.NumOfSV +=1;
+                Global.NumOfSV +=1;
 
-                Glocal.numofsv.setText("Count: " + Glocal.NumOfSV.toString());
-                Glocal.viewresult.setImageBitmap(bmp);
-                Glocal.status.setImageResource(R.drawable.confirm);
+                Global.numofsv.setText("Count: " + Global.NumOfSV.toString());
+                Global.viewresult.setImageBitmap(bmp);
+                Global.status.setImageResource(R.drawable.confirm);
 //
-//                Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
+//                Intent intent = new Intent(Global.ApplicationContext, FaceTrackerActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                Glocal.ApplicationContext.startActivity(intent);
+//                Global.ApplicationContext.startActivity(intent);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         // Do something after 5s = 5000ms
-                        Intent intent = new Intent(Glocal.ApplicationContext, FaceTrackerActivity.class);
+                        Intent intent = new Intent(Global.ApplicationContext, FaceTrackerActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        Glocal.ApplicationContext.startActivity(intent);
+                        Global.ApplicationContext.startActivity(intent);
                     }
                 }, 1500);
 
@@ -199,22 +198,20 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     }
 
     public static void savebitmap(@NonNull Bitmap bmp) throws IOException {
-        Glocal.inProgress=false;
+        Global.inProgress=false;
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-//        //Create root folder
+        //Create root folder
         File folder_data = new File(Environment.getExternalStorageDirectory() + File.separator + "CHECK_IN_DATA");
-//        if (!folder_data.exists())
-//        {
-//            folder_data.mkdir();
-//        }
 
         //Create class folder
-        File folder_class = new File(folder_data,Glocal.ClassID.toUpperCase());
+        File folder_class = new File(folder_data, Global.ClassID.toUpperCase());
         if (!folder_class.exists())
         {
             folder_class.mkdir();
+            File logfile = new File(folder_class,"SYNC.LOG");
+            logfile.createNewFile();
         }
 
         //Create date folder

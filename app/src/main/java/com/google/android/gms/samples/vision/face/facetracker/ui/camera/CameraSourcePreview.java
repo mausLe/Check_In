@@ -24,7 +24,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
-import com.google.android.gms.samples.vision.face.facetracker.Glocal;
+import com.google.android.gms.samples.vision.face.facetracker.Global;
 import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
@@ -130,7 +130,7 @@ public class CameraSourcePreview extends ViewGroup {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = 320;
         int height = 240;
-        Glocal.inProgress=true;
+        Global.inProgress=true;
         if (mCameraSource != null) {
             Size size = mCameraSource.getPreviewSize();
             if (size != null) {
