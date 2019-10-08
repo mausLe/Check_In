@@ -1,17 +1,25 @@
 package com.google.android.gms.samples.vision.face.facetracker;
 
+import android.R.id;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -91,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, EnterClassActivity.class);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
-                finish();
+
             }
         });
 
@@ -108,10 +116,33 @@ public class MainActivity extends AppCompatActivity {
 
                 } else
                 {
-                    String class_dir = mySpin.getSelectedItem().toString();
-                    SyncingImages syncImg = new SyncingImages();
-                    class_path = "/CHECK_IN_DATA/" + class_dir;
-                    syncImg.execute(class_path);
+                    if (!isNetworkAvailable())
+                    {
+                        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
+                        alertDialog.setMessage("Can not connect to the internet!");
+                        alertDialog.setButton(Dialog.BUTTON_NEGATIVE,"OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        alertDialog.show();
+                        alertDialog.getButton(Dialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP,30.0f);
+                        TextView textView = alertDialog.findViewById(android.R.id.message);
+                        textView.setTextSize(30.0f);
+                    }
+                    else
+                    {
+                        String class_dir = mySpin.getSelectedItem().toString();
+                        SyncingImages syncImg = new SyncingImages();
+                        class_path = "/CHECK_IN_DATA/" + class_dir;
+                        syncImg.execute(class_path);
+                    }
+
+
+
                 }
 
 
@@ -263,29 +294,30 @@ public class MainActivity extends AppCompatActivity {
         return data_json_imgs;
     }
 
-    public class SyncingImages extends AsyncTask<String, Void, ArrayList<String>> {
-
+    public class SyncingImages extends AsyncTask<String, Void, String> {
+        ArrayList<String> list_sync_date;
         @Override
-        protected ArrayList<String> doInBackground(String... params) {
-            ArrayList<String> list_sync_date = getSyncDate(params[0]);
+        protected String doInBackground(String... params) {
+            list_sync_date = getSyncDate(params[0]);
             Log.d("ListSyncDate", list_sync_date.toString());
-
+            String result= "F";
             for (String date: list_sync_date)
             {
                 JSONObject json_data_imgs = createJSON_IMG(params[0]+"/"+date);
-                String result = sendJSON2("http://192.168.20.170:5000/syncImage",json_data_imgs.toString());
+                result = sendJSON2("http://192.168.20.170:5000/syncImage",json_data_imgs.toString());
             }
 
 
 
-            return list_sync_date;
+            return result;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.setMessage("prepare...");
+            progressDialog.setMessage("Syncing...");
             progressDialog.show();
+
         }
 
         @Override
@@ -294,13 +326,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> result) {
+        protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
-            Log.d("RESULTTTT",result.toString());
-            Log.d("RESLKLK", class_path);
-            writeSyncedDate(Environment.getExternalStorageDirectory().toString() + class_path+"/SYNC.LOG",result);
+            writeSyncedDate(Environment.getExternalStorageDirectory().toString() + class_path+"/SYNC.LOG",list_sync_date);
+            final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
+            alertDialog.setMessage("Sync Done!");
+            alertDialog.setButton(Dialog.BUTTON_NEGATIVE,"OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.dismiss();
+                }
+            });
+
+            alertDialog.show();
+            alertDialog.getButton(Dialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP,30.0f);
+            TextView textView = alertDialog.findViewById(android.R.id.message);
+            textView.setTextSize(30.0f);
+
             // this is expecting a response code to be sent from your server upon receiving the POST data
         }
     }
@@ -345,4 +390,10 @@ public class MainActivity extends AppCompatActivity {
         return data;
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

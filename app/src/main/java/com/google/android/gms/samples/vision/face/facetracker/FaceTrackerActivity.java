@@ -100,14 +100,11 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         Global.numofsv = findViewById(R.id.numberSV);
         Global.numofsv.setText("Count: " + Global.NumOfSV.toString());
 
-
-
         Global.Msg= findViewById(R.id.msg);
         btnFinish = findViewById(R.id.btnfinish);
 
         NameClass = findViewById(R.id.nameClass);
         NameClass.setText(Global.ClassID);
-
 
         /////get dimension
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -144,7 +141,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         params_st.width= Global.widthScreen/3;
         Global.status.setLayoutParams(params_st);
         //set position of classid text
-        NameClass.setX(Global.widthScreen/5);
+        NameClass.setX(Global.widthScreen/20);
         NameClass.setY(Global.widthScreen*1.03f);
 
         //set position of counter text
@@ -518,18 +515,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             return mDelegate.setFocus(id);
         }
 
-
-
-
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.d("CDA", "onBackPressed Called");
-//        Intent setIntent = new Intent(FaceTrackerActivity.this, MainActivity.class);
-//        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(setIntent);
-//    }
+
 
 
 }
