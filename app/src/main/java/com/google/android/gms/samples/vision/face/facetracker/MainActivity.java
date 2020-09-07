@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.content.pm.PackageInfoCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -27,6 +29,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private Spinner mySpin;
     private ProgressDialog progressDialog;
     protected String class_path;
+
+
 
 
     @Override
@@ -304,10 +310,8 @@ public class MainActivity extends AppCompatActivity {
             for (String date: list_sync_date)
             {
                 JSONObject json_data_imgs = createJSON_IMG(params[0]+"/"+date);
-                result = sendJSON2("http://192.168.20.170:5000/syncImage",json_data_imgs.toString());
+                result = sendJSON2("http://192.168.20.163:5001/syncImage",json_data_imgs.toString());
             }
-
-
 
             return result;
         }

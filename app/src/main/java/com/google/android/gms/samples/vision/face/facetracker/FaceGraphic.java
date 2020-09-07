@@ -107,8 +107,10 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     /**
      * Draws the face annotations for position on the supplied canvas.
      */
+
     private static final int cx = (Global.coordEllip[0] + Global.coordEllip[2])/2; // (left + right)/2
     private static final int cy = (Global.coordEllip[1] + Global.coordEllip[3])/2; //(top + bot)/2
+//    private static final int cy = ((Global.coordEllip[1] + Global.coordEllip[3])*11)/20; //(top + bot)*0.55
     private static final int radius = 40;
 //    private Intent intent = new Intent(Global.ApplicationContext, FaceTrackerActivity.class);
 
@@ -145,7 +147,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         Global.ProgressFrame= Global.CurrentFrame;
 
         if (dis(x,y)>radius){
-            Global.Msg.setText("Fit your face in box");
+            Global.Msg.setText("Fit your face in the ellipse");
             return;
         } else if (!(face.getIsLeftEyeOpenProbability()>0.7 && face.getIsRightEyeOpenProbability()>0.7)){
             Global.Msg.setText("Open your eyes");
@@ -240,5 +242,3 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     }
 
 }
-
-
